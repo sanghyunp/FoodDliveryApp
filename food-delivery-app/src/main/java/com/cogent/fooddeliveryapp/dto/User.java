@@ -54,7 +54,7 @@ public class User {
 
 	private String password;
 
-	private String name;
+	private String username;
 	
 //	@Temporal(TemporalType.DATE)
 	@JsonFormat(pattern = "yyyy-MM-dd")

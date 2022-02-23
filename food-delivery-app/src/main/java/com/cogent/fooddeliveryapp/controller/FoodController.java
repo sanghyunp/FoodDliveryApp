@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cogent.fooddeliveryapp.dto.Food;
+import com.cogent.fooddeliveryapp.enums.FoodType;
 import com.cogent.fooddeliveryapp.exception.NoDataFoundException;
 import com.cogent.fooddeliveryapp.repository.FoodRepository;
 
@@ -56,7 +58,7 @@ public class FoodController {
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<?> putFoodById(@PathVariable("id") Long id,
 			@Valid @RequestBody Food food) {
-		Food food2 = foodRepository.findById(id).orElseThrow(()-> new NoDataFoundException("Sorry Food Not Found"));
+		Food food2 = foodRepository.findById(id).orElseThrow(()-> new NoDataFoundException("food Not Found"));
 		
 		// add some
 		
@@ -73,33 +75,57 @@ public class FoodController {
 //		return ResponseEntity.ok(updatedFood);
 	}
 	
-//	@GetMapping(value = "/")
-//	public ResponseEntity<?> getFood() {
-//		
-//		return new ResponseEntity<?>();
-//	}
+	@GetMapping(value = "/")
+	public ResponseEntity<?> getAllFood() {
+		List<Food> foods = foodRepository.findAll();
+		if(foods.size() > 0) {
+			return ResponseEntity.ok(foods);
+		} else {
+			return ResponseEntity.status(200).body("no data in Food");
+		}
+	}
 
 
-//	@GetMapping(value = "/{foodType}")
-//	public ResponseEntity<?> getFoodByFoodType(@PathVariable("foodType") String foodType) {
-//		
-//		List<Food> list = foodRepository.findAllById(foodType);
-//		
-////		Food food = foodRepository.findBy(null, null);
-//		
+	@GetMapping(value = "/{foodType}")
+//	@GetMapping(value = "/all/{foodType}")
+	public ResponseEntity<?> getFoodByFoodType(@PathVariable("foodType") String foodType) {
+		List<Food> list = foodRepository.findByFoodType(FoodType.valueOf(foodType));
+		
 //		Collections.sort(list, (a,b) -> a.getFoodName().compareTo(b.getFoodName()));
-//		
 //		return ResponseEntity.status(200).body(list);
-//	}
+		return ResponseEntity.ok(list);
+	}
+	
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<?> deleteFoodById(@PathVariable("id") Long id) {
+		
+		if (foodRepository.existsById(id)) {
+			foodRepository.deleteById(id);
+			return ResponseEntity.noContent().build();
+		} else {
+			throw new NoDataFoundException("food id record not found");
+		}
+	}
+
+	
+	
 
 	
 	@GetMapping(value = "/all/desc")
 	public ResponseEntity<?> getAllDescOrder() {
-		
 		List<Food> list = foodRepository.findAll();
 		
 //		Collections.sort(list, (a,b) -> a.getId().compareTo(b.getId())); // ascending order
 		Collections.sort(list, (a,b) -> b.getId().compareTo(a.getId())); // descending order
+		return ResponseEntity.status(200).body(list);
+	}
+	
+	@GetMapping(value = "/all/asc")
+	public ResponseEntity<?> getAllAscOrder() {
+		List<Food> list = foodRepository.findAll();
+		
+		Collections.sort(list, (a,b) -> a.getId().compareTo(b.getId())); // ascending order
+//		Collections.sort(list, (a,b) -> b.getId().compareTo(a.getId())); // descending order
 		return ResponseEntity.status(200).body(list);
 	}
 

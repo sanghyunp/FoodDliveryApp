@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,7 +66,7 @@ public class UserController {
 		// DTO ===> UserResponse()
 		UserResponse userResponse = new UserResponse();
 		userResponse.setEmail(user.getEmail());
-		userResponse.setName(user.getName());
+		userResponse.setName(user.getUsername());
 		Set<String> roles = new HashSet<>();
 		userResponse.setDoj(user.getDoj());
 		user.getRoles().forEach(e2->{
@@ -95,7 +96,7 @@ public class UserController {
 		list.forEach(e->{
 			UserResponse userResponse = new UserResponse();
 			userResponse.setEmail(e.getEmail());
-			userResponse.setName(e.getName());
+			userResponse.setName(e.getUsername());
 			Set<String> roles = new HashSet<>();
 			userResponse.setDoj(e.getDoj());
 			e.getRoles().forEach(e2->{
@@ -122,6 +123,55 @@ public class UserController {
 			throw new NoDataFoundException("No users are there");
 		}
 	}
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<?> putUserById(@PathVariable("id") Long id, @Valid @RequestBody User user) {
+		User user2 = userService.getUserById(id).orElseThrow(()-> new NoDataFoundException("Sorry user not found"));
+		
+//		UserResponse userResponse = new UserResponse();
+//		userResponse.setEmail(user.getEmail());
+//		userResponse.setName(user.getName());
+//		Set<String> roles = new HashSet<>();
+//		userResponse.setDoj(user.getDoj());
+//		user.getRoles().forEach(e2->{
+//			roles.add(e2.getRoleName().name());
+//		});
+//		Set<com.cogent.fooddeliveryapp.payload.request.Address> addresses = new HashSet<>();
+//		user.getAddresses().forEach(e3->{
+//			com.cogent.fooddeliveryapp.payload.request.Address address2 = new com.cogent.fooddeliveryapp.payload.request.Address();
+//			address2.setHouseNumber(e3.getHouseNumber());
+//			address2.setCity(e3.getCity());
+//			address2.setCountry(e3.getCountry());
+//			address2.setState(e3.getState());
+//			address2.setStreet(e3.getStreet());
+//			address2.setZip(e3.getZip());
+//			addresses.add(address2);
+//		});
+//		userResponse.setAddress(addresses);
+//		userResponse.setRoles(roles);
+		
+//		Set<com.cogent.fooddeliveryapp.payload.request.Address> addresses = new HashSet<>();
+//		user2.getAddresses().forEach(e ->{
+//			com.cogent.fooddeliveryapp.payload.request.Address address = new com.cogent.fooddeliveryapp.payload.request.Address();
+//			address.setHouseNumber(e.getHouseNumber());
+//			address.setCity(e.getCity());
+//			address.setCountry(e.getCountry());
+//			address.setState(e.getState());
+//			address.setStreet(e.getStreet());
+//			address.setZip(e.getZip());
+//			addresses.add(address);
+//		});
+		
+		user2.setAddresses(user.getAddresses());
+		user2.setEmail(user.getEmail());
+		user2.setUsername(user.getUsername());
+		user2.setPassword(user.getPassword());
+		
+		User updatedUser = userService.addUser(user2);
+		
+		return ResponseEntity.status(200).body(updatedUser);
+	}
+
 
 	@PostMapping("/register")
 	public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signupRequest) {
@@ -171,7 +221,7 @@ public class UserController {
 		
 		user.setAddresses(addresses);
 		user.setEmail(signupRequest.getEmail());
-		user.setName(signupRequest.getName());
+		user.setUsername(signupRequest.getName());
 		user.setPassword(signupRequest.getPassword());
 		user.setRoles(roles);
 		user.setDoj(signupRequest.getDoj());
@@ -181,5 +231,7 @@ public class UserController {
 		return ResponseEntity.status(201).body(user2); // 201; created successfully
 		
 	}
+	
+	
 	
 }
