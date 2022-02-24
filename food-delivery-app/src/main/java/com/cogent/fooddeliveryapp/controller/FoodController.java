@@ -5,12 +5,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.xml.ws.Response;
 
-import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cogent.fooddeliveryapp.dto.Food;
@@ -29,7 +25,7 @@ import com.cogent.fooddeliveryapp.exception.NoDataFoundException;
 import com.cogent.fooddeliveryapp.repository.FoodRepository;
 
 
-@RequestMapping("/food")
+@RequestMapping("/api/food")
 //@ResponseBody
 //@Controller
 @RestController
@@ -39,7 +35,8 @@ public class FoodController {
 	@Autowired
 	FoodRepository foodRepository;
 	
-	@PostMapping(value = "/") // @Valid ; activate method
+	@PostMapping(value = "/add") // @Valid ; activate method
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> createFood(@Valid @RequestBody Food food) {
 		
 		Food food2 = foodRepository.save(food);

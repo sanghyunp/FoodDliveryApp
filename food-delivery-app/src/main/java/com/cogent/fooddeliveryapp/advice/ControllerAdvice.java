@@ -29,7 +29,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 	public ResponseEntity<?> noDataFoundException(NoDataFoundException e) {
 		Map<String, String> map = new HashMap<>();
 		
-		System.out.println("hello from no data");
+//		System.out.println("hello from no data");
 		
 		map.put("message", "no data found");
 //		System.err.println(e);
@@ -55,8 +55,8 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) { //@Valid annotation.(post method)
 //		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-		System.out.println("hello from handlemethod are not valid");
-		
+//		System.out.println("hello from handlemethod are not valid");
+	
 		ApiError apiError = new ApiError(status);
 		apiError.setMessage("Validation Error");
 		apiError.addValidationErrors(ex.getFieldErrors());
@@ -73,7 +73,7 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	protected ResponseEntity<?> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException e) {
-		System.out.println("hello from type mismatch");
+//		System.out.println("hello from type mismatch");
 		
 		ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
 		apiError.setMessage(e.getMessage());
@@ -89,11 +89,11 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 		return buildResponseEntity(apiError);
 	}
 	
-	@ExceptionHandler(Exception.class)
-	protected ResponseEntity<?> handleMethodException(Exception e) {
-		ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
-		apiError.setMessage(e.getMessage());
-		return buildResponseEntity(apiError);
-	}
+//	@ExceptionHandler(Exception.class)
+//	protected ResponseEntity<?> handleMethodException(Exception e) {
+//		ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR);
+//		apiError.setMessage(e.getMessage());
+//		return buildResponseEntity(apiError);
+//	}
 	
 }

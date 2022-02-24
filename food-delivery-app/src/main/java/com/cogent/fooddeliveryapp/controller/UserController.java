@@ -33,7 +33,7 @@ import com.cogent.fooddeliveryapp.service.UserService;
 
 @RestController
 // /api
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 	
 	@Autowired
@@ -173,64 +173,64 @@ public class UserController {
 	}
 
 
-	@PostMapping("/register")
-	public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signupRequest) {
-		// can you create user object?
-		// can you initialize the values based on the signuprequest object?
-		Set<Role> roles = new HashSet<>();
-//		Role role = null;
-		if(signupRequest.getRoles() == null) {
-			Role userRole = roleRepository.findByRoleName(ERole.ROLE_USER)
-			.orElseThrow(()-> new IdNotFoundException("RoleId not found exception"));
-			roles.add(userRole);
-		} else {
-			signupRequest.getRoles().forEach(e->{
-	//			role = new Role();
-				switch (e) {
-				case "user":
-					Role userRole = roleRepository.findByRoleName(ERole.ROLE_USER)
-					.orElseThrow(()-> new IdNotFoundException("RoleId not found exception"));
-					roles.add(userRole);
-					break;
-				case "admin":
-					Role userAdmin = roleRepository.findByRoleName(ERole.ROLE_ADMIN)
-					.orElseThrow(()-> new IdNotFoundException("RoleId not found exception"));
-					roles.add(userAdmin);
-					break; // I added
-				default:
-					break;
-				}
-	//		roles.add(role);
-			});
-		}
-		
-		User user = new User();
-		
-		Set<Address> addresses = new HashSet<>();
-		signupRequest.getAddress().forEach(e->{
-			Address address = new Address();
-			address.setCity(e.getCity());
-			address.setCountry(e.getCountry());
-			address.setHouseNumber(e.getHouseNumber());
-			address.setState(e.getState());
-			address.setStreet(e.getStreet());
-			address.setUser(user);
-			address.setZip(e.getZip());
-			addresses.add(address);
-		});
-		
-		user.setAddresses(addresses);
-		user.setEmail(signupRequest.getEmail());
-		user.setUsername(signupRequest.getName());
-		user.setPassword(signupRequest.getPassword());
-		user.setRoles(roles);
-		user.setDoj(signupRequest.getDoj());
-		
-		User user2 = userService.addUser(user);
-		
-		return ResponseEntity.status(201).body(user2); // 201; created successfully
-		
-	}
+//	@PostMapping("/register")
+//	public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signupRequest) {
+//		// can you create user object?
+//		// can you initialize the values based on the signuprequest object?
+//		Set<Role> roles = new HashSet<>();
+////		Role role = null;
+//		if(signupRequest.getRoles() == null) {
+//			Role userRole = roleRepository.findByRoleName(ERole.ROLE_USER)
+//			.orElseThrow(()-> new IdNotFoundException("RoleId not found exception"));
+//			roles.add(userRole);
+//		} else {
+//			signupRequest.getRoles().forEach(e->{
+//	//			role = new Role();
+//				switch (e) {
+//				case "user":
+//					Role userRole = roleRepository.findByRoleName(ERole.ROLE_USER)
+//					.orElseThrow(()-> new IdNotFoundException("RoleId not found exception"));
+//					roles.add(userRole);
+//					break;
+//				case "admin":
+//					Role userAdmin = roleRepository.findByRoleName(ERole.ROLE_ADMIN)
+//					.orElseThrow(()-> new IdNotFoundException("RoleId not found exception"));
+//					roles.add(userAdmin);
+//					break; // I added
+//				default:
+//					break;
+//				}
+//	//		roles.add(role);
+//			});
+//		}
+//		
+//		User user = new User();
+//		
+//		Set<Address> addresses = new HashSet<>();
+//		signupRequest.getAddress().forEach(e->{
+//			Address address = new Address();
+//			address.setCity(e.getCity());
+//			address.setCountry(e.getCountry());
+//			address.setHouseNumber(e.getHouseNumber());
+//			address.setState(e.getState());
+//			address.setStreet(e.getStreet());
+//			address.setUser(user);
+//			address.setZip(e.getZip());
+//			addresses.add(address);
+//		});
+//		
+//		user.setAddresses(addresses);
+//		user.setEmail(signupRequest.getEmail());
+//		user.setUsername(signupRequest.getName());
+//		user.setPassword(signupRequest.getPassword());
+//		user.setRoles(roles);
+//		user.setDoj(signupRequest.getDoj());
+//		
+//		User user2 = userService.addUser(user);
+//		
+//		return ResponseEntity.status(201).body(user2); // 201; created successfully
+//		
+//	}
 	
 	
 	

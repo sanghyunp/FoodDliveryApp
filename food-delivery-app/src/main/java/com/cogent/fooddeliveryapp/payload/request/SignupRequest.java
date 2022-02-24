@@ -22,7 +22,7 @@ public class SignupRequest {
 	@NotBlank
 	private String password;
 	@NotBlank
-	private String name;
+	private String username;
 	@NotEmpty
 	private Set<Address> address;
 	@JsonFormat(pattern = "MM-dd-yyyy")

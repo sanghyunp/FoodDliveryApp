@@ -5,13 +5,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.cogent.fooddeliveryapp.security.jwt.AuthEntryPointJwt;
 import com.cogent.fooddeliveryapp.security.jwt.AuthTokenFilter;
@@ -20,14 +23,16 @@ import com.cogent.fooddeliveryapp.security.service.UserDetailsServiceImpl;
 @Configuration
 @EnableWebSecurity  // it will make sure that 
 // security env. is enabled.
-@EnableGlobalMethodSecurity(prePostEnabled = true)  // 
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	UserDetailsServiceImpl userDetailsServiceImpl;
 	
 	@Autowired
-	private AuthEntryPointJwt authEntryPointJwt;
+//	private AuthEntryPointJwt authEntryPointJwt;
+	private AuthEntryPointJwt unauthorizedHandler;  // for better understanding
+	
 	
 	@Bean  // to have customized object as per the requirement.
 //	@Scope("prototype")  // multiple object
@@ -41,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(passwordEncoder());
 	}
 	
-	@Bean  // one ; ?
+	@Bean  // one ;
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
@@ -53,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 	
-	@Override
+	@Override  // create all security system by this method
 	protected void configure(HttpSecurity http) throws Exception {
 		// core part security ---> we can restrict the access of end points through this configuration.
 		// we can set unauthorized access through this.
@@ -62,8 +67,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// CORS :
 		// 
 		// TODO Auto-generated method stub
-		super.configure(http);
+		// endpoints specification
+		http.cors().and().csrf().disable()
+		.exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+		.and()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and()   // /api/auth/** ; connected to AuthController.java
+		.authorizeRequests().antMatchers("/api/auth/**").permitAll()  // register and login ; generated token
+		.antMatchers("/api/food/**").permitAll().anyRequest().authenticated();  // authenticated user allowed
+		    // /api/food/** ; connected to FoodController.java
+		// handling the filter
+		http.addFilterBefore(authenticationJwtTokenFilter(), 
+				UsernamePasswordAuthenticationFilter.class);
 	}
+	
 	
 	
 }
