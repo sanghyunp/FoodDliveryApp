@@ -128,9 +128,9 @@ public class AuthController {
 		user.setRoles(roles);
 		user.setDoj(signupRequest.getDoj());
 		
-		User user2 = userService.addUser(user);
+		User addUser = userService.addUser(user);
 		
-		return ResponseEntity.status(201).body(user2); // 201; created successfully
+		return ResponseEntity.status(201).body(addUser); // 201; created successfully
 		
 	}
 	

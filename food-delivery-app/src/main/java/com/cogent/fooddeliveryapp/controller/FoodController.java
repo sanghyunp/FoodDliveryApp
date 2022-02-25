@@ -37,7 +37,9 @@ public class FoodController {
 	
 	@PostMapping(value = "/add") // @Valid ; activate method
 	@PreAuthorize("hasRole('ADMIN')")
+//	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<?> createFood(@Valid @RequestBody Food food) {
+//	public ResponseEntity<?> createFood(@RequestBody Food food) { // added with delete valid!!! after added this ../api/food/add with no data work fine
 		
 		Food food2 = foodRepository.save(food);
 		

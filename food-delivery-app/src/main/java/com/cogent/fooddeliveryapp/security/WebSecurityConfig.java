@@ -24,6 +24,7 @@ import com.cogent.fooddeliveryapp.security.service.UserDetailsServiceImpl;
 @EnableWebSecurity  // it will make sure that 
 // security env. is enabled.
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+//@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true) // I added for food reg test
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -74,7 +75,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()   // /api/auth/** ; connected to AuthController.java
 		.authorizeRequests().antMatchers("/api/auth/**").permitAll()  // register and login ; generated token
-		.antMatchers("/api/food/**").permitAll().anyRequest().authenticated();  // authenticated user allowed
+//		.antMatchers("/api/food/**").permitAll().anyRequest().authenticated();  // authenticated user allowed
+		.antMatchers("/api/food/**").authenticated()
+		.anyRequest().permitAll(); // it fixed /api/food/add, without token problem
 		    // /api/food/** ; connected to FoodController.java
 		// handling the filter
 		http.addFilterBefore(authenticationJwtTokenFilter(), 
