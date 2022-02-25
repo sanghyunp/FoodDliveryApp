@@ -9,26 +9,19 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cogent.fooddeliveryapp.IdNotFoundException;
-import com.cogent.fooddeliveryapp.dto.Address;
-import com.cogent.fooddeliveryapp.dto.Role;
 import com.cogent.fooddeliveryapp.dto.User;
-import com.cogent.fooddeliveryapp.enums.ERole;
 import com.cogent.fooddeliveryapp.exception.NoDataFoundException;
-import com.cogent.fooddeliveryapp.payload.request.SignupRequest;
 import com.cogent.fooddeliveryapp.payload.response.UserResponse;
 import com.cogent.fooddeliveryapp.repository.RoleRepository;
-import com.cogent.fooddeliveryapp.repository.UserRepository;
 import com.cogent.fooddeliveryapp.service.UserService;
 
 @RestController
@@ -41,6 +34,9 @@ public class UserController {
 	
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> deleteByUserId(@PathVariable("id") Long id) {
@@ -124,6 +120,7 @@ public class UserController {
 		}
 	}
 	
+	// need to check function
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<?> putUserById(@PathVariable("id") Long id, @Valid @RequestBody User user) {
 		User user2 = userService.getUserById(id).orElseThrow(()-> new NoDataFoundException("Sorry user not found"));
@@ -165,7 +162,7 @@ public class UserController {
 		user2.setAddresses(user.getAddresses());
 		user2.setEmail(user.getEmail());
 		user2.setUsername(user.getUsername());
-		user2.setPassword(user.getPassword());
+		user2.setPassword(passwordEncoder.encode(user.getPassword()));
 		
 		User updatedUser = userService.addUser(user2);
 		

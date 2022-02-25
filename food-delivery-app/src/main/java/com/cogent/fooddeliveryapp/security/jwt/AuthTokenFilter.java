@@ -29,7 +29,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthTokenFilter.class);
 
-	@Override
+	@Override  // when signin hit, that coming to here
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub

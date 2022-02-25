@@ -130,8 +130,30 @@ public class AuthController {
 		
 		User addUser = userService.addUser(user);
 		
+		// ResponseEntity ; basic type of method output put it back to client
+		// body() ; response
+		// java ---> JSON ---> jackson api
 		return ResponseEntity.status(201).body(addUser); // 201; created successfully
 		
+/*
+ 200 201 204 301 302 400 401 404 500 501 503 
+1xxs – Informational responses: 
+The server is thinking through the request.
+
+2xxs – Success! 
+The request was successfully completed and the server gave the browser the expected response.
+
+3xxs – Redirection: You got redirected somewhere else. 
+The request was received, but there’s a redirect of some kind.
+
+4xxs – Client errors: Page not found. 
+The site or page couldn’t be reached. 
+(The request was made, but the page isn’t valid — 
+this is an error on the website’s side of the conversation and often appears when a page doesn’t exist on the site.)
+
+5xxs – Server errors: Failure. 
+A valid request was made by the client but the server failed to complete the request.
+*/
 	}
 	
 	

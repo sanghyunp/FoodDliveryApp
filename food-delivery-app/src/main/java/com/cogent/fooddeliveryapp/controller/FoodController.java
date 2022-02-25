@@ -47,8 +47,9 @@ public class FoodController {
 	}
 
 	@GetMapping(value = "/{id}")
+//	@GetMapping(value = "/id/{id}")
 	public ResponseEntity<?> getFoodById(@PathVariable("id") @Min(1) Long id) {
-		System.out.println("hello from controller method begining");
+//		System.out.println("hello from controller method begining");
 		
 		Food food = foodRepository.findById(id).orElseThrow(()-> new NoDataFoundException("no data found"));
 		return ResponseEntity.ok(food);
@@ -74,7 +75,7 @@ public class FoodController {
 //		return ResponseEntity.ok(updatedFood);
 	}
 	
-	@GetMapping(value = "/")
+	@GetMapping(value = "/all")
 	public ResponseEntity<?> getAllFood() {
 		List<Food> foods = foodRepository.findAll();
 		if(foods.size() > 0) {
@@ -85,8 +86,8 @@ public class FoodController {
 	}
 
 
-	@GetMapping(value = "/{foodType}")
-//	@GetMapping(value = "/all/{foodType}")
+//	@GetMapping(value = "/{foodType}")
+	@GetMapping(value = "/all/{foodType}")
 	public ResponseEntity<?> getFoodByFoodType(@PathVariable("foodType") String foodType) {
 		List<Food> list = foodRepository.findByFoodType(FoodType.valueOf(foodType));
 		
