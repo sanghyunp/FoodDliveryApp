@@ -14,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.cogent.fooddeliveryapp.exception.DataAlreadyExistsException;
 import com.cogent.fooddeliveryapp.exception.NameAlreadyExistsException;
 import com.cogent.fooddeliveryapp.exception.NoDataFoundException;
 import com.cogent.fooddeliveryapp.exception.apierror.ApiError;
@@ -35,6 +36,12 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 //		System.err.println(e);
 		ApiError apiError = new ApiError(HttpStatus.NOT_FOUND, e.getMessage(), e);
 //		System.out.println(apiError);
+		return buildResponseEntity(apiError);
+	}
+	
+	@ExceptionHandler(DataAlreadyExistsException.class)
+	public ResponseEntity<?> dataAlreadyExistsException(DataAlreadyExistsException e){
+		ApiError apiError = new ApiError(HttpStatus.FOUND, "data already exists", e);
 		return buildResponseEntity(apiError);
 	}
 	

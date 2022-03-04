@@ -14,7 +14,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +27,7 @@ import com.cogent.fooddeliveryapp.dto.Address;
 import com.cogent.fooddeliveryapp.dto.Role;
 import com.cogent.fooddeliveryapp.dto.User;
 import com.cogent.fooddeliveryapp.enums.ERole;
+import com.cogent.fooddeliveryapp.exception.NoDataFoundException;
 import com.cogent.fooddeliveryapp.payload.request.SigninRequest;
 import com.cogent.fooddeliveryapp.payload.request.SignupRequest;
 import com.cogent.fooddeliveryapp.payload.response.JwtResponse;
@@ -52,7 +56,7 @@ public class AuthController {
 	@Autowired
 	JwtUtils jwtUtils;
 	
-	@PostMapping("/signin")
+	@PostMapping("/signin") // /api/authenticate
 	public ResponseEntity<?> signin(@Valid @RequestBody SigninRequest signinRequest){
 		
 		Authentication authentication = authenticationManager
@@ -74,7 +78,7 @@ public class AuthController {
 	}
 	
 	
-	@PostMapping("/register")
+	@PostMapping("/register")  // /api/register
 	public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signupRequest) {
 		// can you create user object?
 		// can you initialize the values based on the signuprequest object?
@@ -156,6 +160,36 @@ A valid request was made by the client but the server failed to complete the req
 */
 	}
 	
+	// Need to add user information change function later.
+//	@PutMapping(value = "/{id}")
+//	public ResponseEntity<?> putUserById(@PathVariable("id") Long id, @Valid @RequestBody User user) {
+//		User user2 = userService.getUserById(id).orElseThrow(()-> new NoDataFoundException("Sorry user not found"));
+//		
+//		user2.setAddresses(user.getAddresses());
+//		user2.setEmail(user.getEmail());
+//		user2.setUsername(user.getUsername());
+//		user2.setPassword(passwordEncoder.encode(user.getPassword()));
+//		
+//		User updatedUser = userService.addUser(user2);
+//		
+//		return ResponseEntity.status(200).body(updatedUser);
+//	}
 	
+	// Need to add User account delete by user or(and) admin later.
+//	@DeleteMapping(value = "/{id}")
+//	public ResponseEntity<?> deleteByUserId(@PathVariable("id") Long id) {
+//		// check userid exists or not 
+//		if(userService.existsById(id)) {
+//			// success part
+//			userService.deleteUserById(id);
+//			return ResponseEntity.noContent().build();
+//		} else {
+//			// failure part
+//			throw new NoDataFoundException("record not found");
+//		}
+//		// if exists then delete it
+//		// if not then throw exception.
+//
+//	}
 	
 }

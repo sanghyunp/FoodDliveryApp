@@ -38,7 +38,7 @@ public class UserController {
 	@Autowired
 	PasswordEncoder passwordEncoder;
 	
-	@DeleteMapping(value = "/{id}")
+	@DeleteMapping(value = "/{id}")  // /api/users/:userID
 	public ResponseEntity<?> deleteByUserId(@PathVariable("id") Long id) {
 		// check userid exists or not 
 		if(userService.existsById(id)) {
@@ -51,11 +51,10 @@ public class UserController {
 		}
 		// if exists then delete it
 		// if not then throw exception.
-		
-		
+
 	}
 	
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/{id}")  // /api/users/:userID
 	public ResponseEntity<?> getUserById(@PathVariable("id") long id) {
 		
 		User user = userService.getUserById(id).orElseThrow(()-> new NoDataFoundException("data not available"));
@@ -84,7 +83,7 @@ public class UserController {
 		return ResponseEntity.status(200).body(userResponse);
 	}
 	
-	@GetMapping(value = "/")
+	@GetMapping(value = "/")  // /api/users
 	public ResponseEntity<?> getAllUsers() {
 		
 		List<User> list = userService.getAllUsers();
@@ -120,8 +119,7 @@ public class UserController {
 		}
 	}
 	
-	// need to check function
-	@PutMapping(value = "/{id}")
+	@PutMapping(value = "/{id}")  // /api/users/userID
 	public ResponseEntity<?> putUserById(@PathVariable("id") Long id, @Valid @RequestBody User user) {
 		User user2 = userService.getUserById(id).orElseThrow(()-> new NoDataFoundException("Sorry user not found"));
 		
@@ -169,7 +167,7 @@ public class UserController {
 		return ResponseEntity.status(200).body(updatedUser);
 	}
 
-
+	// Move to AuthController
 //	@PostMapping("/register")
 //	public ResponseEntity<?> createUser(@Valid @RequestBody SignupRequest signupRequest) {
 //		// can you create user object?

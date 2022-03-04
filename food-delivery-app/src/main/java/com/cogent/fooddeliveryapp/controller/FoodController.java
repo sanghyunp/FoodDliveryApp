@@ -35,7 +35,7 @@ public class FoodController {
 	@Autowired
 	FoodRepository foodRepository;
 	
-	@PostMapping(value = "/add") // @Valid ; activate method
+	@PostMapping(value = "/add") // @Valid ; activate method,  /api/food
 	@PreAuthorize("hasRole('ADMIN')")
 //	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<?> createFood(@Valid @RequestBody Food food) {
@@ -46,7 +46,7 @@ public class FoodController {
 		return ResponseEntity.status(201).body(food2);
 	}
 
-	@GetMapping(value = "/{id}")
+	@GetMapping(value = "/{id}")  // /api/food/:foodID
 //	@GetMapping(value = "/id/{id}")
 	public ResponseEntity<?> getFoodById(@PathVariable("id") @Min(1) Long id) {
 //		System.out.println("hello from controller method begining");
@@ -55,7 +55,7 @@ public class FoodController {
 		return ResponseEntity.ok(food);
 	}
 	
-	@PutMapping(value = "/{id}")
+	@PutMapping(value = "/{id}")  // /api/food/:foodID
 	public ResponseEntity<?> putFoodById(@PathVariable("id") Long id,
 			@Valid @RequestBody Food food) {
 		Food food2 = foodRepository.findById(id).orElseThrow(()-> new NoDataFoundException("food Not Found"));
@@ -75,7 +75,7 @@ public class FoodController {
 //		return ResponseEntity.ok(updatedFood);
 	}
 	
-	@GetMapping(value = "/all")
+	@GetMapping(value = "/all")  // /api/food/
 	public ResponseEntity<?> getAllFood() {
 		List<Food> foods = foodRepository.findAll();
 		if(foods.size() > 0) {
@@ -87,7 +87,7 @@ public class FoodController {
 
 
 //	@GetMapping(value = "/{foodType}")
-	@GetMapping(value = "/all/{foodType}")
+	@GetMapping(value = "/all/{foodType}")  // /api/food/:foodType
 	public ResponseEntity<?> getFoodByFoodType(@PathVariable("foodType") String foodType) {
 		List<Food> list = foodRepository.findByFoodType(FoodType.valueOf(foodType));
 		
@@ -96,7 +96,7 @@ public class FoodController {
 		return ResponseEntity.ok(list);
 	}
 	
-	@DeleteMapping(value = "/{id}")
+	@DeleteMapping(value = "/{id}")  // /api/food/:foodID
 	public ResponseEntity<?> deleteFoodById(@PathVariable("id") Long id) {
 		
 		if (foodRepository.existsById(id)) {

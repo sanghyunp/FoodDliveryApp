@@ -42,7 +42,7 @@ public class JwtUtils {
 				.setSubject(userPrincipal.getUsername()) // name
 				.setIssuedAt(new Date())  // iat
 				.setExpiration(new Date(new Date().getTime() + jwtExpirationMs))  // expiring date
-				.signWith(SignatureAlgorithm.HS512, jwtSecret)  // SIGNATURE data details
+				.signWith(SignatureAlgorithm.HS512, jwtSecret)  // SIGNATURE data details, jwtSecret;encryption
 				.compact();  // compact inquiry
 		
 	}
